@@ -1,10 +1,11 @@
 import Map from 'ol/Map';
 import View from 'ol/View';
 import Polygon from 'ol/geom/Polygon';
-import Draw, {createRegularPolygon, createBox} from 'ol/interaction/Draw';
-import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
-import {OSM, Vector as VectorSource} from 'ol/source';
+import Draw from 'ol/interaction/Draw';
+import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/XYZ';
+import VectorSource from 'ol/source/vector';
+import VectorLayer from 'ol/layer/vector';
 
 var raster = new TileLayer({
   source: new XYZ({
@@ -30,22 +31,22 @@ var map = new Map({
   })
 });
 
-var typeSelect = document.getElementById('type');
+var typeSelect: any = document.getElementById('type');
 
-var draw; // global so we can remove it later
+var draw: Draw; // global so we can remove it later
 function addInteraction() {
   var value = typeSelect.value;
   if (value !== 'None') {
     var geometryFunction;
     if (value === 'Square') {
       value = 'Circle';
-      geometryFunction = createRegularPolygon(4);
+      geometryFunction = Draw.createRegularPolygon(4);
     } else if (value === 'Box') {
       value = 'Circle';
-      geometryFunction = createBox();
+      geometryFunction = Draw.createBox();
     } else if (value === 'Star') {
       value = 'Circle';
-      geometryFunction = function(coordinates, geometry) {
+      geometryFunction = (coordinates: any, geometry: any) => {
         var center = coordinates[0];
         var last = coordinates[1];
         var dx = center[0] - last[0];
@@ -63,7 +64,7 @@ function addInteraction() {
         }
         newCoordinates.push(newCoordinates[0].slice());
         if (!geometry) {
-          geometry = new Polygon([newCoordinates]);
+          geometry = new Polygon(newCoordinates);
         } else {
           geometry.setCoordinates([newCoordinates]);
         }
@@ -78,7 +79,6 @@ function addInteraction() {
     map.addInteraction(draw);
   }
 }
-
 
 /**
  * Handle change event.
