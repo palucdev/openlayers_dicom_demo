@@ -11,19 +11,51 @@ export class Toolbox {
 
     private currentActive!: string;
 
+    private selections: Array<{type: string, data: any}> = [];
+
     constructor(map: Map, source: VectorSource) {
         this.initializeInteractions(source);
 
         map.addInteraction(this.point);
         this.point.setActive(false);
+        this.point.on('drawend', this.onDrawEnd.bind(this));
+
         map.addInteraction(this.chain);
         this.chain.setActive(false);
+        this.chain.on('drawend', this.onDrawEnd.bind(this));
+
         map.addInteraction(this.square);
         this.square.setActive(false);
+        this.square.on('drawend', this.onDrawEnd.bind(this));
+
         map.addInteraction(this.rect);
         this.rect.setActive(false);
+        this.rect.on('drawend', this.onDrawEnd.bind(this));
+
         map.addInteraction(this.circle);
         this.circle.setActive(false);
+        this.circle.on('drawend', this.onDrawEnd.bind(this));
+    }
+
+    private onDrawEnd(e: any) {
+        console.log('New Selection: ', e);
+        let coordinates = this.currentActive === "Circle"
+        ? e.feature.getGeometry().getRadius() + " " + e.feature.getGeometry().getCenter()
+        : e.feature.getGeometry().getCoordinates();
+
+        // Unwrapping coordinates for rectangle and square (for future compatibility)
+        coordinates = this.currentActive === "Rectangle" || this.currentActive === "Square" ? coordinates[0] : coordinates;
+
+        let selection = {
+            type: this.currentActive,
+            data: coordinates
+        }
+
+        this.selections.push(selection);
+    }
+
+    public getSelections(): Array<{type: string, data: any}> {
+        return this.selections;
     }
 
     public activate(toolName: string): void {

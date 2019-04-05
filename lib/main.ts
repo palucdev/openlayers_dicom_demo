@@ -1,8 +1,6 @@
 import Map from 'ol/Map';
 import { Toolbox } from "./toolbox";
 import View from 'ol/View';
-import Polygon from 'ol/geom/Polygon';
-import Draw from 'ol/interaction/Draw';
 import TileLayer from 'ol/layer/tile';
 import XYZ from 'ol/source/XYZ';
 import VectorSource from 'ol/source/vector';
@@ -33,15 +31,37 @@ var map = new Map({
 });
 
 var typeSelect: any = document.getElementById('type');
-var textArea: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('textarea');
+var selectionList: HTMLElement = <HTMLElement>document.getElementById('selection-list');
 
 var toolbox: Toolbox = new Toolbox(map, source);
+
 
 /**
  * Handle change event.
  */
 typeSelect.onchange = function() {
-  toolbox.activate(typeSelect.value)
+  toolbox.activate(typeSelect.value);
 };
+
+source.on('change', () => {
+  console.log('Layer change');
+  selectionList.innerHTML = formatSelections(toolbox.getSelections());
+})
+
+function formatSelections(selections: Array<{type: string, data: any[]}>): string {
+  let selectionHtmlString = "";
+
+  selections.forEach((selection) => {
+    console.log('Selection: ', selection);
+
+    let formatedData: string = selection.type === "Circle" ? selection.data.toString() : selection.data.join("<br>");
+    formatedData = formatedData.replace(new RegExp(" ", "g"), "<br>");
+    formatedData = formatedData.replace(new RegExp(",", "g"), " : ");
+
+    selectionHtmlString += selection.type + ":: " + formatedData + '<br>';
+  });
+
+  return selectionHtmlString;
+}
 
 toolbox.activate(typeSelect.value)
