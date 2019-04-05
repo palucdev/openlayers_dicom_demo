@@ -34,8 +34,6 @@ var map = new Map({
 var typeSelect: any = document.getElementById('type');
 var textArea: HTMLTextAreaElement = <HTMLTextAreaElement>document.getElementById('textarea');
 
-console.log('Draw objects: ', Draw, Draw.createRegularPolygon);
-
 var draw: Draw; // global so we can remove it later
 function addInteraction() {
   var value = typeSelect.value;
