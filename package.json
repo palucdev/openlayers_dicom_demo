@@ -12,8 +12,7 @@
     "webpack-command": "^0.3.0"
   },
   "dependencies": {
-    "@types/ol": "^4.6.4",
-    "@types/openlayers": "^4.6.16",
-    "ol": "^5.1.2"
+    "@types/ol": "4.6.4",
+    "ol": "4.6.4"
   }
 }
