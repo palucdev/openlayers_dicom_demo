@@ -8,6 +8,7 @@ export class Toolbox {
     private square!: Draw;
     private rect!: Draw;
     private circle!: Draw;
+    private brush!: Draw;
 
     private currentActive!: string;
 
@@ -35,6 +36,10 @@ export class Toolbox {
         map.addInteraction(this.circle);
         this.circle.setActive(false);
         this.circle.on('drawend', this.onDrawEnd.bind(this));
+
+        map.addInteraction(this.brush);
+        this.brush.setActive(false);
+        this.brush.on('drawend', this.onDrawEnd.bind(this));
     }
 
     private onDrawEnd(e: any) {
@@ -87,6 +92,8 @@ export class Toolbox {
                 return this.rect;
             case 'Circle':
                 return this.circle;
+            case 'Freehand':
+                return this.brush;
         }
 
         return null;
@@ -118,6 +125,12 @@ export class Toolbox {
         this.circle = new Draw({
             source: source,
             type: 'Circle'
+        });
+
+        this.brush = new Draw({
+            source: source,
+            type: 'LineString',
+            freehand: true
         });
     }
 

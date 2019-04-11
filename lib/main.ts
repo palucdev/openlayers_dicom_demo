@@ -8,7 +8,7 @@ import VectorLayer from 'ol/layer/vector';
 
 var raster = new TileLayer({
   source: new XYZ({
-    url: 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+    url: './data/{z}/{y}_{x}.png'
   })
 });
 
